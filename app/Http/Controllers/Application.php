@@ -5,25 +5,16 @@ namespace App\Http\Controllers;
 use App\User;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-use libphonenumber\NumberParseException;
 use Mockery\Exception;
 use Propaganistas\LaravelPhone\PhoneNumber;
 use Validator;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
-
 
 use App\Application as ApplicationModel;
 use App\Worker as WorkerModel;
 use App\WorkerPhone as WorkerPhoneModel;
 use App\DebitCard as DebitCardModel;
-use App\Role;
-use App\Privilege as PrivilegeModel;
-
 use App\Exceptions\Application\assignWorker\TwoDiffWorkersException;
 
 
