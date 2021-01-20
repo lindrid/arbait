@@ -1,0 +1,120 @@
+toggleChildWorkers(parentWorker)
+{
+  var table = document.getElementById("worker-table");
+  var childWorkers = this.child_workers[parentWorker.id];
+  var childWorkersCount = childWorkers.length;
+  var parentWorkersIndexes = this.openAccordionsIndexes;
+  var dI = 0;
+  var userWantsCloseThisAccordion = false;
+  var indexOfClosingAcc = -1;
+
+  console.log(parentWorker);
+
+  for (var j = 0; j < parentWorkersIndexes.length; j++)
+  {
+    if (parentWorkersIndexes[j] < parentWorker.index)
+    {
+      dI += this.openAccordionsStrCount[j];
+    }
+    else if (parentWorkersIndexes[j] == parentWorker.index)
+    {
+      userWantsCloseThisAccordion = true;
+      indexOfClosingAcc = j;
+    }
+  }
+
+  if (userWantsCloseThisAccordion)
+  {
+    for (var i = 0; i < this.openAccordionsStrCount[indexOfClosingAcc]; i++)
+    {
+      table.deleteRow(parentWorker.index + 3 + dI);
+    }
+    this.openAccordionsIndexes.splice(indexOfClosingAcc, 1);
+    this.openAccordionsStrCount.splice(indexOfClosingAcc, 1);
+    return;
+  }
+
+  this.openAccordionsIndexes.push(parentWorker.index);
+  this.openAccordionsStrCount.push(childWorkersCount);
+
+  for (var i = 0; i < childWorkersCount; i++)
+  {
+    var row = table.insertRow(parentWorker.index + 3 + dI + i);
+
+    var cell1 = row.insertCell(0);
+    cell1.style.cssText = this.styleOfOpenAccStrings;
+
+    var cell2 = row.insertCell(1);
+    cell2.style.cssText = this.styleOfOpenAccStrings;
+
+    var cell3 = row.insertCell(2);
+    cell3.style.cssText = this.styleOfOpenAccStrings;
+
+    var cell4 = row.insertCell(3);
+    cell4.style.cssText = this.styleOfOpenAccStrings;
+
+    var cell5 = row.insertCell(4);
+    cell5.style.cssText = this.styleOfOpenAccStrings;
+
+    var cell6 = row.insertCell(5);
+    cell6.style.cssText = this.styleOfOpenAccStrings;
+
+    cell1.innerHTML = (childWorkers[i].phone === undefined) ?
+      '' : childWorkers[i].phone;
+    cell2.innerHTML = (childWorkers[i].debit_card === undefined) ?
+      '' : childWorkers[i].debit_card;
+    cell3.innerHTML = (childWorkers[i].money === undefined) ?
+      '' : childWorkers[i].money;
+    cell4.innerHTML = (childWorkers[i].work_hours === undefined) ?
+      '' : childWorkers[i].work_hours;
+    cell5.innerHTML = childWorkers[i].responsible_for_money;
+    cell6.innerHTML = "<a href=\"#\"\n" +
+      "                         v-bind:disabled=\"(application.state > CLOSED_ST)? true: false\"\n" +
+      "                         class=\"btn btn-xs btn-danger\"\n" +
+      "                         v-on:click=\"deleteEntry(props.row.index)\"\n" +
+      "                      >";
+
+    row.className = "openAccordionRow";
+  }
+},
+
+
+<table class="worker-table" id="worker-table">
+  <tr>
+    <th><b>Phone number</b></th>
+    <th><b>Debet card</b></th>
+    <th><b>Money</b></th>
+    <th><b>Work hours</b></th>
+    <th><b>Responsible</b></th>
+    <th><b>Delete</b></th>
+  </tr>
+
+  <tr>
+
+  <tr v-for="worker in workers">
+    <td >
+      <div v-if="worker.parent == 1">
+        <strong v-on:click="toggleChildWorkers(worker)" class="pointer">
+          {{worker.phone}}(+{{child_workers[worker.id].length}})
+        </strong>
+      </div>
+      <div v-else>
+        {{worker.phone}}
+      </div>
+    </td>
+    <td>{{worker.debit_card}}</td>
+    <td>{{worker.money}}</td>
+    <td>{{worker.work_hours}}</td>
+    <td>{{worker.responsible_for_money}}</td>
+    <td>
+      <a href="#"
+         v-bind:disabled="(application.state > CLOSED_ST)? true: false"
+         class="btn btn-xs btn-danger"
+         v-on:click="deleteEntry(worker.id)"
+      >
+        Удалить
+      </a>
+    </td>
+  </tr>
+</table>
+

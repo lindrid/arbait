@@ -1,0 +1,1 @@
+UPDATE `income` SET date=DATE(created_at) WHERE date IS NULL OR date = '' ;
