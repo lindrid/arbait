@@ -10,79 +10,62 @@
         </div>
       </div>
       <div v-else class="panel panel-default">
-            <div class="panel-heading">Список {{app_type}} заявок за {{date}}</div>
+            <div v-if="app_type === 'account'" class="panel-heading">
+              Список заявок с рассчетного счета
+            </div>
+
             <div class="panel-body">
+                <router-link v-if="userCan('WatchMoversReport')"
+                             :to="{ name: 'accountancy' }" class="btn btn-default">
+                  Отчет
+                </router-link>
+
+                <router-link v-if="userCan('WatchInstaReport')"
+                             :to="{ name: 'accountancyInstagram' }" class="btn btn-default">
+                  Отчет по Instagram
+                </router-link>
 
                 <p>Количество заявок : <b>{{app_count}}</b></p>
-                <div v-if="devochka_mode">
-                    <router-link :to="{ name: 'zayavkaCreate', params: {dispatcher_name: 'nastya'}}" class="btn btn-default">
-                        Создать заявку
-                    </router-link>
-                </div>
-                <div v-else>
-                    <router-link v-if="userCan('CreateApplications')"
-                            :to="{ name: 'applicationCreate' }" class="btn btn-default">
-                        Создать заявку
-                    </router-link>
 
-                    <router-link v-if="userCan('WatchMoversReport')"
-                            :to="{ name: 'accountancy' }" class="btn btn-default">
-                        Отчет
-                    </router-link>
+              <div class="input-group">
+                <router-link :to="{ name: 'applicationCreate' }"
+                             class="btn btn-default margin-r-b"
+                             :class="{ disabled: !userCan('CreateApplications') }"
+                >
+                    Создать заявку
+                </router-link>
 
-                    <router-link v-if="userCan('WatchInstaReport')"
-                            :to="{ name: 'accountancyInstagram' }" class="btn btn-default">
-                        Отчет по Instagram
-                    </router-link>
+                <button v-if="app_type == 'account'"
+                        class="btn btn-default  margin-r-b"
+                        @click="$router.push({ name: 'applications_with_page',
+                            params: {page: 1} }); locationReload()"
+                >
+                  Обычные заявки
+                </button>
 
-                    <div v-if="app_type == 'all'">
-                        <button
-                                class="btn btn-default"
-                                @click="$router.push({ name: 'applications'}); locationReload()"
-                        >
-                            Актуальные заявки
-                        </button>
+                <button v-else
+                  class="btn btn-default  margin-r-b"
+                  @click="$router.push({ name: 'account_applications_with_page',
+                    params:  {page: 1} }); locationReload()"
+                >
+                  Заявки на РС
+                </button>
+              </div>
 
-                        <button
-                                class="btn btn-default"
-                                @click="$router.push({ name: 'applications_with_param',  params: {date: 'account'}}); locationReload()"
-                        >
-                           Заявки на РС
-                        </button>
-                    </div>
+              <div>
+                <button v-bind:disabled="(page == 1)"
+                        class="btn btn-default  margin-r-b"
+                        @click="$router.push({ name: 'applications_with_page',
+                          params:  {page: page - 1} }); locationReload()">
+                  Вперед
+                </button>
 
-                    <div v-if="app_type == 'actual'">
-                        <button
-                                class="btn btn-default"
-                                @click="$router.push({ name: 'applications_with_param',  params: {date: 'all'}}); locationReload()"
-                        >
-                            Все заявки
-                        </button>
-
-                        <button
-                                class="btn btn-default"
-                                @click="$router.push({ name: 'applications_with_param',  params: {date: 'account'}}); locationReload()"
-                        >
-                            Заявки на РС
-                        </button>
-                    </div>
-
-                    <div v-if="app_type == 'account'">
-                        <button
-                                class="btn btn-default"
-                                @click="$router.push({ name: 'applications'}); locationReload()"
-                        >
-                            Актуальные заявки
-                        </button>
-
-                        <button
-                                class="btn btn-default"
-                                @click="$router.push({ name: 'applications_with_param',  params: {date: 'all'}}); locationReload()"
-                        >
-                            Все заявки
-                        </button>
-                    </div>
-                </div>
+                <button class="btn btn-default margin-r-b"
+                        @click="$router.push({ name: 'applications_with_page',
+                          params:  {page: Number(page) + 1} }); locationReload()">
+                  Назад
+                </button>
+              </div>
 
                 <div>
                     <vue-good-table
@@ -161,7 +144,6 @@
                         </template>
                     </vue-good-table>
                 </div>
-
 
             </div>
         </div>
@@ -243,6 +225,9 @@
                 error: false,
                 error_msg: '',
 
+                thereIsPagination: false,
+                page: 1,
+
                 columns: [
                     {
                         label: 'W',
@@ -317,48 +302,29 @@
         },
         mounted()
         {
-            //this.tableKey += 1;
-            var dispatcher = '';
-            console.log('Route:');
+            /*console.log('Route:');
             console.log(this.$window.route);
             console.log('User privileges');
-            console.log(this.$window.userPrivileges);
-
-            if (this.$route.name == 'zayavki') {
-                dispatcher = '/' + this.ID_DEVOCHKA.toString();
-                this.devochka_mode = true;
-            }
-
-            this.date_param = this.$route.params.date;
+            console.log(this.$window.userPrivileges);*/
+            var dispatcher = '';
             var app = this;
-
-            this.link = this.$axios.defaults.baseURL.substring(0, this.$axios.defaults.baseURL.length-4);
-            this.link += '/app/show';
-
             let parameters = '';
-            if (typeof this.date_param !== 'undefined' &&
-                this.date_param == 'all')
+
+            if (this.$route.params.page !== undefined)
             {
-                app.date = 'все время';
-                app.app_type = 'all';
-                parameters = 'all';
+                this.thereIsPagination = true;
+                this.page = this.$route.params.page;
+                parameters += '/' + this.page;
+
             }
-            else if (typeof this.date_param === 'undefined' ||
-                typeof this.date_param !== 'undefined' && this.date_param == 'actual')
+            console.log(this.page);
+            if (this.$route.name == 'account_applications_with_page')
             {
-                app.date = 'актуальное время';
-                app.app_type = 'actual';
-                parameters = 'actual';
-            }
-            else if (typeof this.date_param !== 'undefined' &&
-                this.date_param == 'account')
-            {
-                app.date = 'все время';
-                app.app_type = 'account';
-                parameters = 'all/account';
+                this.app_type = 'account';
+                parameters += '/' + this.app_type;
             }
 
-            this.$axios.get('/application/index/' + parameters)
+            this.$axios.get('/application/index' + parameters)
             .then(function (resp) {
                 app.apps = resp.data.apps;
                 app.rows = resp.data.rows;
@@ -470,4 +436,14 @@
         opacity: 0.65;
         cursor: not-allowed;
     }
+
+    .disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+  .margin-r-b {
+    margin-right: 10px;
+    margin-bottom: 5px;
+  }
 </style>

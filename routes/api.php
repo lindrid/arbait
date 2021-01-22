@@ -21,9 +21,8 @@ Route::middleware('check.privilege')->group(function ()
 {
     /*** действия с заявками ***/
     Route::get('/application/index',                                'Application@index');
-    Route::get('/application/index/{date}',                         ['uses' =>'Application@index']);
-    Route::get('/application/index/{date}/{type}',                  ['uses' =>'Application@index']);
-    Route::get('/application/index/{date}/{type}/{dispatcherId}',   ['uses' =>'Application@index']);
+    Route::get('/application/index/{page}',                         ['uses' =>'Application@index']);
+    Route::get('/application/index/{page}/{type}',                  ['uses' =>'Application@index']);
     Route::get('/application/show/{id}',                            ['uses' =>'Application@show']);
     Route::delete('/application/delete/{id}',                       ['uses' =>'Application@destroy']);
     Route::post('application/store',                                'Application@store');

@@ -220,10 +220,17 @@ const router = new VueRouter(   {
         },
 
         {
-            path: '/apps/:date',
+            path: '/apps/:page',
             component: Applications,
-            name: 'applications_with_param',
+            name: 'applications_with_page',
             meta: { label: 'Заявки', title: 'Заявки' }
+        },
+
+        {
+            path: '/apps/account/:page',
+            component: Applications,
+            name: 'account_applications_with_page',
+            meta: { label: 'Заявки на РС', title: 'Заявки на РС' }
         },
 
         {
