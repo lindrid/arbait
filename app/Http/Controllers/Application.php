@@ -5,16 +5,25 @@ namespace App\Http\Controllers;
 use App\User;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use libphonenumber\NumberParseException;
 use Mockery\Exception;
 use Propaganistas\LaravelPhone\PhoneNumber;
 use Validator;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+
 
 use App\Application as ApplicationModel;
 use App\Worker as WorkerModel;
 use App\WorkerPhone as WorkerPhoneModel;
 use App\DebitCard as DebitCardModel;
+use App\Role;
+use App\Privilege as PrivilegeModel;
+
 use App\Exceptions\Application\assignWorker\TwoDiffWorkersException;
 
 
@@ -89,38 +98,70 @@ class Application extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($page = 1, $type = 'ordinary')
+    public function index($date = 'today', $type = 'ordinary', $dispatcherId = null)
     {
-        if ($type == 'account')
+        if ($date == 'all')
         {
-            $apps = ApplicationModel
-                ::orderBy('date', 'desc')
-                ->where('pay_method', ApplicationModel::PM_ACCOUNT)
-                //->skip (($page - 1) * 25)
-                //->take (25)
-                ->get();
+            if ($type == 'account')
+            {
+                $apps = $dispatcherId ?
+                    ApplicationModel
+                        ::orderBy('date', 'desc')
+                        ->where('pay_method', ApplicationModel::PM_ACCOUNT)
+                        ->where('dispatcher_id', User::ID_DEVOCHKA)
+                        ->get()
+                    :
+                    ApplicationModel
+                        ::orderBy('date', 'desc')
+                        ->where('pay_method', ApplicationModel::PM_ACCOUNT)
+                        ->get();
+            }
+            else
+            {
+                $apps = $dispatcherId ?
+                    ApplicationModel
+                        ::orderBy('date', 'desc')
+                        ->where('dispatcher_id', User::ID_DEVOCHKA)
+                        ->get()
+                    :
+                    ApplicationModel
+                        ::orderBy('date', 'desc')
+                        ->get();
+            }
         }
-        else
-        {
+        else if ($date == 'actual') {
             $dateAfterWeek = Carbon::now()->addDays(7);
 
-            if ($page == 1)
-            {
-                $apps = ApplicationModel
+            $apps = $dispatcherId ?
+                ApplicationModel
+                    ::whereBetween(DB::raw('DATE(date)'), [$date, $dateAfterWeek])
+                    ->orderBy('date', 'desc')
+                    ->where('dispatcher_id', User::ID_DEVOCHKA)
+                    ->get()
+                :
+                ApplicationModel
                     ::whereBetween(DB::raw('DATE(date)'),
                         [Carbon::today()->toDateString(), $dateAfterWeek->toDateString()])
                     ->orderBy('date', 'desc')
                     ->get();
-            }
-            else if ($page >= 2)
+        }
+        else
+        {
+            if ($date == 'today')
             {
-                $apps = ApplicationModel
-                    ::where('date', '<' , Carbon::today()->toDateString())
-                    ->orderBy('date', 'desc')
-                    ->skip (($page - 2) * 25)
-                    ->take (25)
-                    ->get();
+                $date = Carbon::today()->toDateString();
             }
+            $apps = $dispatcherId ?
+                ApplicationModel
+                    ::orderBy('date', 'desc')
+                    ->whereDate('date', $date)
+                    ->where('dispatcher_id', User::ID_DEVOCHKA)
+                    ->get()
+                :
+                ApplicationModel
+                    ::orderBy('date', 'desc')
+                    ->whereDate('date', $date)
+                    ->get();
         }
 
         $rows = [];
@@ -188,6 +229,7 @@ class Application extends Controller
             'userPrivileges'=> User::getPrivileges(),
             'apps'          => $apps,
             'rows'          => $rows,
+            'date'          => $date,
             'appCount'      => $appCount,
             'state_colors'  => ApplicationModel::getStateColors(),
         ];
