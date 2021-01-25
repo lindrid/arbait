@@ -138,6 +138,7 @@ Vue.use(VueScrollTo, {
 
 
 axios.defaults.baseURL = 'http://192.168.42.78/api';
+// add here
 
 var Object = {
     counter: 0
