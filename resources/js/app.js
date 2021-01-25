@@ -136,8 +136,11 @@ Vue.use(VueScrollTo, {
     y: true
 });
 
+
 // brunch master 2
-axios.defaults.baseURL = 'http://arbait.in/api';
+axios.defaults.baseURL = 'http://192.168.42.78/api';
+// add here
+
 
 var Object = {
     counter: 0
