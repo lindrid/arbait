@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\DB;
@@ -13,11 +12,7 @@ use App\Http\Requests\RegisterFormRequest;
 use App\User;
 use App\UserPhone;
 
-use App\Http\Controllers\CRegistrationProgress;
-
 use Propaganistas\LaravelPhone\PhoneNumber;
-use Mockery\Exception;
-use Tymon\JWTAuth\Facades\JWTAuth;
 use Carbon\Carbon;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Facades\Session;
