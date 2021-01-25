@@ -136,7 +136,7 @@ Vue.use(VueScrollTo, {
     y: true
 });
 
-// brunch master
+// brunch master 2
 axios.defaults.baseURL = 'http://arbait.in/api';
 
 var Object = {
