@@ -109,38 +109,30 @@
                             </span>
 
                             <span v-else>
-                                    <span v-if="props.column.field == 'address'" style="cursor: pointer">
-                                            <span
+                              <span v-if="props.column.field == 'address'" style="cursor: pointer">
+                                <span
 
-                                                 v-bind:style="{
-                                                    color: state_colors[props.row.state],
-                                                    fontWeight: state_colors[props.row.state] == 'red' ? 'bold': ''
-                                                }"
-                                            >
-                                                <div v-if="devochka_mode">
-                                                    {{props.formattedRow[props.column.field]}}
-                                                </div>
-                                                <div v-else>
-                                                    <a
-                                                        :href="link+'/'+props.row.id"
-                                                        :style="{color: state_colors[props.row.state]}"
-                                                    >
-                                                        {{props.formattedRow[props.column.field]}}
-                                                    </a>
-                                                </div>
-                                            </span>
-                                    </span>
-                                    <span v-else style="cursor: default">
-
-                                        <div :style="{
-                                            color: state_colors[props.row.state],
-                                            fontWeight: state_colors[props.row.state] == 'red' ? 'bold': ''
-                                        }">
-                                            {{props.formattedRow[props.column.field]}}
-                                        </div>
-
-                                    </span>
-
+                                     v-bind:style="{
+                                        color: state_colors[props.row.state],
+                                        fontWeight: state_colors[props.row.state] == 'red' ? 'bold': ''
+                                    }"
+                                >
+                                  <a
+                                      :href="link+'/'+props.row.id"
+                                      :style="{color: state_colors[props.row.state]}"
+                                  >
+                                      {{props.formattedRow[props.column.field]}}
+                                  </a>
+                                </span>
+                              </span>
+                              <span v-else style="cursor: default">
+                                <div :style="{
+                                    color: state_colors[props.row.state],
+                                    fontWeight: state_colors[props.row.state] == 'red' ? 'bold': ''
+                                }">
+                                    {{props.formattedRow[props.column.field]}}
+                                </div>
+                              </span>
                             </span>
 
                         </template>
@@ -212,8 +204,6 @@
                 ID_DEVOCHKA: 4,
 
                 address: '1',
-
-                devochka_mode: false,
 
                 composedAppText: '',
                 income_applications: [],
@@ -409,18 +399,6 @@
             onRightClick(e) {
                 let routeData = this.$router.resolve({name: 'applicationCard', params: {id: params.row.id}});
                 window.open(routeData.href, '_blank');
-            },
-            onCellClick(params) {
-                if (params.column.field == 'address' && this.devochka_mode) {
-                    this.$router.push({
-                        name: 'zayavkaEdit',
-                        params: {id: params.row.id}
-                    });
-                }
-                // params.row - row object
-                // params.column - column object
-                // params.rowIndex - index of this row on the current page.
-                // params.event - click event*/
             },
             onCopy: function (e) {
                 alert('You just copied: ' + e.text)
