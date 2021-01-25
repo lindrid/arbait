@@ -84,11 +84,6 @@ class Application extends Controller
         return preg_replace('/\d+/u', '', $addr);
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index($page = 1, $type = 'ordinary')
     {
         if ($type == 'account')
