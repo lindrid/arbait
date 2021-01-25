@@ -9,12 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 
-/**
- * @property mixed name
- * @property string password
- * * @property string type
- */
-//class User extends Authenticatable implements JWTSubject
+
 class User extends Model
 {
     use Notifiable;
