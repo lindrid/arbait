@@ -563,7 +563,7 @@
         <br>
 
         <div class="form-group">
-          <router-link to="/apps/actual" class="btn btn-default">Назад</router-link>
+          <router-link to="/apps" class="btn btn-default">Назад</router-link>
           <button onclick="window.close();" class="btn btn-default">Закрыть</button>
         </div>
       </div>
@@ -1229,7 +1229,7 @@
                             let allWorkersGotMoney = response.data.allWorkersGotMoney;
                             app.error = false;
                             if (allWorkersGotMoney) {
-                                app.$router.push({name: 'applications_with_param', params: {date: 'actual'}});
+                                app.$router.push({name: 'applications_with_page', params: {page: 1}});
                             }
                         }
                     }).catch(function (error) {

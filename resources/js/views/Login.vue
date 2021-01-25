@@ -41,7 +41,7 @@
                         password: app.password
                     },
                     success: function () {
-                        app.$router.push({name: 'applications_with_param', params: {date: 'actual'}});
+                        app.$router.push({name: 'applications_with_page', params: {page: 1}});
                         location.reload();
                     },
                     error: function (resp) {

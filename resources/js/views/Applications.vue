@@ -15,17 +15,7 @@
             </div>
 
             <div class="panel-body">
-                <router-link v-if="userCan('WatchMoversReport')"
-                             :to="{ name: 'accountancy' }" class="btn btn-default">
-                  Отчет
-                </router-link>
-
-                <router-link v-if="userCan('WatchInstaReport')"
-                             :to="{ name: 'accountancyInstagram' }" class="btn btn-default">
-                  Отчет по Instagram
-                </router-link>
-
-                <p>Количество заявок : <b>{{app_count}}</b></p>
+              <p>Количество заявок : <b>{{app_count}}</b></p>
 
               <div class="input-group">
                 <router-link :to="{ name: 'applicationCreate' }"
@@ -53,16 +43,28 @@
               </div>
 
               <div>
+                <router-link v-if="userCan('WatchMoversReport')"
+                             :to="{ name: 'accountancy' }" class="btn btn-default margin-r-b">
+                  Отчет
+                </router-link>
+
+                <router-link v-if="userCan('WatchInstaReport')"
+                             :to="{ name: 'accountancyInstagram' }" class="btn btn-default margin-r-b">
+                  Отчет по Instagram
+                </router-link>
+              </div>
+
+              <div>
                 <button v-bind:disabled="(page == 1)"
-                        class="btn btn-default  margin-r-b"
+                        class="btn btn-default"
                         @click="$router.push({ name: 'applications_with_page',
-                          params:  {page: page - 1} }); locationReload()">
+                          params:  {page: page - 1} }); loadData()">
                   Вперед
                 </button>
 
-                <button class="btn btn-default margin-r-b"
+                <button class="btn btn-default"
                         @click="$router.push({ name: 'applications_with_page',
-                          params:  {page: Number(page) + 1} }); locationReload()">
+                          params:  {page: Number(page) + 1} }); loadData()">
                   Назад
                 </button>
               </div>
@@ -306,49 +308,55 @@
             console.log(this.$window.route);
             console.log('User privileges');
             console.log(this.$window.userPrivileges);*/
-            var dispatcher = '';
-            var app = this;
-            let parameters = '';
-
-            if (this.$route.params.page !== undefined)
-            {
-                this.thereIsPagination = true;
-                this.page = this.$route.params.page;
-                parameters += '/' + this.page;
-
-            }
-            console.log(this.page);
-            if (this.$route.name == 'account_applications_with_page')
-            {
-                this.app_type = 'account';
-                parameters += '/' + this.app_type;
-            }
-
-            this.$axios.get('/application/index' + parameters)
-            .then(function (resp) {
-                app.apps = resp.data.apps;
-                app.rows = resp.data.rows;
-                app.userPrivileges = resp.data.userPrivileges;
-
-                app.app_count = resp.data.appCount;
-                if (app.app_count > 0) {
-                    app.rows = resp.data.rows;
-                }
-
-                app.state_colors = resp.data.state_colors;
-                app.CLOSED_ST = resp.data.CLOSED_ST;
-            })
-            .catch(function (resp) {
-                console.log(resp);
-                app.error = true;
-                app.error_msg = resp.response.data.error_msg;
-                //alert("Не удалось загрузить");
-            });
-
-            this.address = this.$store.state.address;
+            this.link = this.$axios.defaults.baseURL.substring(0, this.$axios.defaults.baseURL.length-4);
+            this.link += '/app/show';
+            this.loadData();
             //console.log(this.$store)
         },
         methods: {
+            loadData()
+            {
+                var app = this;
+                let parameters = '';
+
+                if (this.$route.params.page !== undefined)
+                {
+                    this.thereIsPagination = true;
+                    this.page = this.$route.params.page;
+                    parameters += '/' + this.page;
+
+                }
+                console.log(this.page);
+                if (this.$route.name == 'account_applications_with_page')
+                {
+                    this.app_type = 'account';
+                    parameters += '/' + this.app_type;
+                }
+
+                this.$axios.get('/application/index' + parameters)
+                    .then(function (resp) {
+                        app.apps = resp.data.apps;
+                        app.rows = resp.data.rows;
+                        app.userPrivileges = resp.data.userPrivileges;
+
+                        app.app_count = resp.data.appCount;
+                        if (app.app_count > 0) {
+                            app.rows = resp.data.rows;
+                        }
+
+                        app.state_colors = resp.data.state_colors;
+                        app.CLOSED_ST = resp.data.CLOSED_ST;
+                    })
+                    .catch(function (resp) {
+                        console.log(resp);
+                        app.error = true;
+                        app.error_msg = resp.response.data.error_msg;
+                        //alert("Не удалось загрузить");
+                    });
+
+                this.address = this.$store.state.address;
+            },
+
             userCan(privilege)
             {
                 return (privilege in this.userPrivileges);
