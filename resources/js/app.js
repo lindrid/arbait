@@ -137,7 +137,7 @@ Vue.use(VueScrollTo, {
 });
 
 
-axios.defaults.baseURL = 'http://192.168.42.78/api';
+axios.defaults.baseURL = 'http://arbait.in/api';
 
 var Object = {
     counter: 0
