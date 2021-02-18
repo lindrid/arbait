@@ -38,7 +38,7 @@ class AuthController extends Controller
     public function register(RegisterFormRequest $request)
     {
         try {
-            DB::connection()->getPdo();
+            
         }
         catch (\Exception $e) {
             return response([
@@ -238,31 +238,15 @@ class AuthController extends Controller
         $request->validate(
             [
                 //'title' => 'bail|required|unique:posts|max:255',
-                'fullname'           => 'max:61',
-                'phone_call'         => 'max:17',
-                'phone_whatsapp'     => 'max:18',
-                'pass_series_number' => 'max:11',
-                'foreign_pass_series_number' => 'max:11',
-                'birth_date'         => 'max:10',
-                'pass_date'          => 'max:10',
-                'pass_code'          => 'max:7',
-                'who_give'           => 'max:150',
-                'inn'                => 'max:12',
-                'address'            => 'max:100',
-                'password'           => 'max:150',
+                'name'          => 'min:3|max:25',
+                'phone'         => 'min:11|max:17',
+                'password'      => 'min:5|max:80',
             ],
             [
-                'fullname.max'              => Lang::get('auth.max_fullname'),
-                'phone_call.max'            => Lang::get('auth.max_phone_call'),
-                'phone_whatsapp.max'        => Lang::get('auth.max_phone_whatsapp'),
-                'pass_series_number.max'    => Lang::get('auth.max_pass_series'),
-                'birth_date.max'            => Lang::get('auth.max_birth_date'),
-                'pass_date.max'             => Lang::get('auth.max_pass_date'),
-                'pass_code.max'             => Lang::get('auth.max_pass_code'),
-                'inn.max'                   => Lang::get('auth.max_inn'),
-                'address.max'               => Lang::get('auth.max_address'),
-                'password.max'              => Lang::get('auth.max_password'),
-                'passport_image.image'      => "Загружайте изображение, а не иной файл!"
+                'name.min'     => Lang::get('auth.min_name'),
+                'name.max'     => Lang::get('auth.max_name'),
+                'phone.max'    => Lang::get('auth.max_phone'),
+                'password.max' => Lang::get('auth.max_password'),
             ]
         );
     }

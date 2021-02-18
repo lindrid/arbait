@@ -20,14 +20,14 @@ use Illuminate\Http\Request;
 Route::middleware('check.privilege')->group(function ()
 {
     /*** действия с заявками ***/
-    Route::get('/application/index',                                'Application@index');
-    Route::get('/application/index/{page}',                         ['uses' =>'Application@index']);
-    Route::get('/application/index/{page}/{type}',                  ['uses' =>'Application@index']);
-    Route::get('/application/show/{id}',                            ['uses' =>'Application@show']);
-    Route::delete('/application/delete/{id}',                       ['uses' =>'Application@destroy']);
-    Route::post('application/store',                                'Application@store');
-    Route::get('/application/edit/{id}',                            ['uses' => 'Application@edit']);
-    Route::post('/application/update/{id}',                         ['uses' =>'Application@update']);
+    Route::get('/application/index',                'Application@index');
+    Route::get('/application/index/{page}',         ['uses' =>'Application@index']);
+    Route::get('/application/index/{page}/{type}',  ['uses' =>'Application@index']);
+    Route::get('/application/show/{id}',            ['uses' =>'Application@show']);
+    Route::delete('/application/delete/{id}',       ['uses' =>'Application@destroy']);
+    Route::post('application/store',                'Application@store');
+    Route::get('/application/edit/{id}',            ['uses' => 'Application@edit']);
+    Route::post('/application/update/{id}',         ['uses' =>'Application@update']);
 
     /*** действия внутри заявки с рабочими и ее статусом ***/
     Route::post('/application/assign/worker',       'Application@assignWorker');
@@ -89,7 +89,7 @@ Route::middleware('auth:api')->get('/confirm-worker', function (Request $request
     return response()->json($occupies);
 });
 */
-Route::post('auth/register', 'AuthController@register');
+Route::post('register', 'AuthController@register');
 
 Route::get('userindex', 'AuthController@index');
 

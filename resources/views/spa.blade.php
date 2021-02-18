@@ -15,6 +15,7 @@
     <link rel="stylesheet" type="text/css" href="{{URL::asset('css/slick.css')}}/"/>
     <link rel="stylesheet" type="text/css" href="{{URL::asset('css/slick-theme.css')}}"/>
     <link rel="stylesheet" href="{{URL::asset('css/style.css')}}">
+
     <script>
         window.route = @json($route);
         window.errorMsg = '{{$errorMsg}}';
@@ -24,6 +25,7 @@
             window.userName = undefined;
         @endif
     </script>
+
 </head>
 <body>
 

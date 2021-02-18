@@ -1,0 +1,10 @@
+node_modules
+etc
+logs
+public
+src
+tmp
+vendor
+storage
+.idea
+.editorconfig

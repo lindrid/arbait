@@ -161,7 +161,7 @@
 
           <br>
 
-          <div v-for="(dcard, index) in debit_cards" class="input-group col-xs-12 col-md-5">
+          <div v-for="(dcard, index) in debit_cards" class="input-group col-xs-12 col-md-6">
                         <span
                                 class="input-group-addon"
                                 @click="debitCardForAssignTieOrNot(index)"
@@ -172,11 +172,14 @@
                             </label>
                         </span>
             <span class="input-group-addon"><span>Карта {{index+1}}</span></span>
-            <input
-                    class="form-control"
-                    v-model="dcard.number"
-            />
-            <div class="input-group-btn">
+            <span class="new-line">
+              <input
+                      class="form-control"
+                      v-model="dcard.number"
+              />
+            </span>
+
+            <div class="input-group-btn" id="debitCardGroupBtn">
               <button class="btn btn-default" @click="setCardByPhone(index)">
                 <i  class="glyphicon glyphicon-phone"></i>
               </button>
@@ -1705,6 +1708,19 @@
                 alert('Failed to copy texts')
             }
         },
+
+        updated()
+        {
+            let inputGroupBtn = document.querySelector('#debitCardGroupBtn');
+            let width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+
+            if (width < 550) {
+                inputGroupBtn.classList.remove('input-group-btn');
+            }
+            //console.log('inputGroupBtn');
+            //console.log(inputGroupBtn);
+        },
+
         mounted()
         {
             let app = this;
@@ -1764,7 +1780,9 @@
 
 <style scoped>
 
-
+  span.new-line {
+    display: block;
+  }
 
   .pointer {
     cursor: pointer;
@@ -1855,8 +1873,8 @@
   .col-sm-input-debitcard {
     -ms-flex: 0 0 180px;
     flex: 0 0 180px;
-    max-width: 210px;
-    padding-right: 25px;
+    width: 230px;
+    margin-right: 10px;
   }
 
   .col-sm-input-money {

@@ -62,11 +62,15 @@
                   Вперед
                 </button>
 
-                <button class="btn btn-default"
+                <button class="btn btn-default mr-2"
                         @click="$router.push({ name: 'applications_with_page',
                           params:  {page: Number(page) + 1} }); loadData()">
                   Назад
                 </button>
+
+                <input type="text"
+                       v-model="appCountOnPage"
+                />
               </div>
 
                 <div>
@@ -214,6 +218,8 @@
                 component_params: {dispatcher_name: 'gleb'},
                 app_count: 0,
 
+                appCountOnPage: 50,
+
                 error: false,
                 error_msg: '',
 
@@ -321,6 +327,11 @@
                 {
                     this.app_type = 'account';
                     parameters += '/' + this.app_type;
+                }
+
+                if (this.thereIsPagination)
+                {
+
                 }
 
                 this.$axios.get('/application/index' + parameters)
