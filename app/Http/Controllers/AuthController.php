@@ -64,6 +64,8 @@ class AuthController extends Controller
       {
         $phone = PhoneNumber::make($request->phone)->ofCountry('RU');
         $workerPhone = WorkerPhone::where('number', $phone)->get()->first();
+        // сохраним в сессию name, phone, password
+
         if ($workerPhone) 
         {
           $worker = $workerPhone->worker;
@@ -72,6 +74,7 @@ class AuthController extends Controller
             $user = $worker->user;
             if ($user != null) 
             {
+              // удалим из сессии name, phone, password
               return response
               ([
                   'status' => 'error',
