@@ -242,7 +242,8 @@ class Application extends Model
     public function setParentPlusWorkerData($pivotRow)
     {
         $basicHours = $this->workerHours;
-        $basicMoney = ($this->hourly_job)? $this->workerHours * $this->price_for_worker : $this->price;
+        $basicMoney = ($this->hourly_job)? $this->workerHours * $this->price_for_worker : 
+            $this->price_for_worker;
         $this->setParentWorkerData($pivotRow, '+', $basicHours, $basicMoney);
     }
 
@@ -260,7 +261,7 @@ class Application extends Model
             $this->parentWorkers[$relationType][$pivotRow->parent_worker_id]['total_money'] = $basicMoney;
         }
 
-        $money = ($this->hourly_job)? $this->workerHours * $this->price_for_worker : $this->price;
+        $money = ($this->hourly_job)? $this->workerHours * $this->price_for_worker : $this->price_for_worker;
 
         $this->parentWorkers[$relationType][$pivotRow->parent_worker_id]['total_hours'] += $this->workerHours;
         $this->parentWorkers[$relationType][$pivotRow->parent_worker_id]['total_money'] += $money;

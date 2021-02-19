@@ -10,6 +10,8 @@ use Illuminate\Database\QueryException;
 
 use App\Http\Requests\RegisterFormRequest;
 use App\User;
+use App\Worker;
+use App\WorkerPhone;
 use App\UserPhone;
 
 use Propaganistas\LaravelPhone\PhoneNumber;
@@ -37,8 +39,10 @@ class AuthController extends Controller
 
     public function register(RegisterFormRequest $request)
     {
+        $this->myValidation($request);
+
         try {
-            
+            DB::connection()->getPdo();
         }
         catch (\Exception $e) {
             return response([
@@ -49,75 +53,12 @@ class AuthController extends Controller
             ], 400);
         }
 
-        $this->myValidation($request);
-
-        $request->pass_series_number = str_replace(' ', '',
-            $request->pass_series_number);
-        $passport = array (
-            'fullname'       => $request->fullname,
-            'series_number'  => $request->pass_series_number,
-            'code'           => $request->pass_code,
-            'date'           => $request->pass_date,
-            'birth_date'     => $request->birth_date,
-        );
-
-        $userWithSamePassport = User::where('pass_series_number',
-            $passport['series_number'])->first();
-
-
-        if ($userWithSamePassport &&
-            (strpos($userWithSamePassport->type, $request->user_type) !== false))
-        {
-            $a = array(
-                'w' => 'Рабочий',
-                'd' => 'Диспетчер'
-            );
-            return response([
-                'error' => true,
-                'error_same_passport' => true,
-                'errors' => array(
-                    'pass_series_number' => $a[$request->user_type] .
-                        " с таким паспортом уже зарегистрирован."
-                )
-            ], 400);
-        }
-
-        $verResult = $this->verifyPassport($passport);
-        if ($verResult['error']) {
-            return response()->json($verResult, 400);
-        }
-        //$userWithSamePassport = false;
-
-        if (!$userWithSamePassport) {
-            $user = new User;
-            $user->fullname = trim($request->fullname);
-            $user->phone_call = $request->phone_call;
-            $user->phone_whatsapp = $request->phone_whatsapp;
-            $user->pass_series_number = $request->pass_series_number;
-            $user->birth_date = $request->birth_date;
-            $user->pass_date = $request->pass_date;
-            $user->pass_code = $request->pass_code;
-            $user->inn = $this->user_inn;
-            $user->address = trim($request->address);
-
-            // $request->password приходит в виде хэша bscrypt'а с солью 12.
-            // и снова вызываем bcrypt, а также вызываем bcrypt
-            // ниже в функции login, иначе всегда получаем ошибку "Invalid Credentials"
-            // а слать пароли в нешифрованном виде - негоже
-            $user->password = bcrypt($request->password);
-
-            $user->type = $request->user_type;
-            $user->RF_citizen = 1;
-            $user->approved = 0;
-            $user->verified_phone = 0;
-        }
-        else {
-            $user = $userWithSamePassport;
-            $user->type .= $request->user_type;
-        }
-
         DB::beginTransaction();
         try {
+            $phone = PhoneNumber::make($request->phone)->ofCountry('RU');
+            $worker = WorkerPhone::where('number', $phone);
+
+
             $user->save();
 
             if ($this->equalNumbers($request->phone_call,
