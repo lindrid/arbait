@@ -39,78 +39,82 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        /* name, phone, password */
-        $this->myValidation($request);
+      /* name, phone, password */
+      $this->myValidation($request);
 
-        try {
-            DB::connection()->getPdo();
-        }
-        catch (\Exception $e) {
-            return response([
-                'error' => true,
-                'errors' => array (
-                    'main' => "Сбой соединения с базой данных, обратитесь к администратору"
-                )
-            ], 400);
-        }
+      /* будем сохранять в сессию, что нужно сделать
+      на следующем шаге, когда пользователь подтвердит
+      свой телефон */
 
-        DB::beginTransaction();
-        try {
-            $phone = PhoneNumber::make($request->phone)->ofCountry('RU');
-            $workerPhone = WorkerPhone::where('number', $phone)->get()->first();
-            
-            return response([
-                'phone' => $phone,
-                'workerPhone' => $workerPhone->worker
-            ], 400);
-
-            $user->save();
-
-            if ($this->equalNumbers($request->phone_call,
-                                    $request->phone_whatsapp))
-            {
-                $userPhones = new UserPhone;
-
-                $userPhones->user_id = $user->id;
-                $userPhones->number = $request->phone_call;
-                $userPhones->type = 'cw';
-                $userPhones->save();
-            }
-            else {
-                $userPhones = array (
-                    [
-                        'user_id' => $user->id,
-                        'number' => $request->phone_call,
-                        'type' => 'c'
-                    ],
-                    [
-                        'user_id' => $user->id,
-                        'number' => $request->phone_whatsapp,
-                        'type' => 'w'
-                    ]
-                );
-
-                DB::table('user_phones')->insert($userPhones);
-            }
-        }
-        catch (QueryException $e) {
-            report($e);
-            DB::rollBack();
-            return response([
-                'error' => true,
-                'errors' => array (
-                    'main' => "Возникла ошибка в работе с базой данных, обратитесь к администратору"
-                )
-            ], 400);
-        }
-        DB::commit();
-
-        (new CRegistrationProgress())->save($request);
-
+      try 
+      {
+        DB::connection()->getPdo();
+      }
+      catch (\Exception $e) 
+      {
         return response([
-            'status' => 'success',
-            'data' => $user
-        ], 200);
+          'status' => 'error',
+          'error_msg' => "Сбой соединения с базой данных, обратитесь к администратору",
+          'error_code' => 1
+        ], 400);
+      }
+
+      DB::beginTransaction();
+      try 
+      {
+        $phone = PhoneNumber::make($request->phone)->ofCountry('RU');
+        $workerPhone = WorkerPhone::where('number', $phone)->get()->first();
+        if ($workerPhone) 
+        {
+          $worker = $workerPhone->worker;
+          if ($worker) 
+          {
+            $user = $worker->user;
+            if ($user != null) 
+            {
+              return response
+              ([
+                  'status' => 'error',
+                  'error_msg' => 'Рабочий с таким номером уже зарегистрирован. Попробуйте войти',
+                  'error_code' => 2
+              ], 400);
+            }
+            else
+            {
+              // сохраним в сессию указание:
+              // создать User и привязать к нему Worker
+            }
+          }
+          else
+          {
+            // сохраним в сессию указание:
+            // 1. создать Worker и привязать к нему WorkerPhone
+            // 2. создать User и привязать к нему Worker
+          }
+        }
+        else
+        {
+          // сохраним в сессию указание:
+          // 1. создать WorkerPhone
+          // 2. создать Worker и привязать к нему WorkerPhone
+          // 3. создать User и привязать к нему Worker
+        }
+      }
+      catch (QueryException $e) 
+      {
+          report($e);
+          DB::rollBack();
+          return response([
+              'status' => 'error',
+              'error_msg' => "Возникла ошибка в работе с базой данных, обратитесь к администратору",
+              'error_code' => 3
+          ], 400);
+      }
+      DB::commit();
+
+      return response([
+        'status' => 'ok'
+      ], 200);
     }
 
     public function login(Request $request)
