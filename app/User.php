@@ -58,6 +58,12 @@ class User extends Model
         'password', 'remember_token',
     ];
 
+    
+    public function worker()
+    {
+        return $this->hasOne(Worker::class, 'user_id');
+    }
+
     public function role()
     {
         return $this->belongsTo(Role::class);

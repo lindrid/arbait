@@ -29,7 +29,7 @@ class AuthController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['logout', 'login', 'registration']]);
+        $this->middleware('auth:api', ['except' => ['logout', 'login', 'register']]);
     }
 
     public function index()
@@ -37,8 +37,9 @@ class AuthController extends Controller
         return User::all();
     }
 
-    public function register(RegisterFormRequest $request)
+    public function register(Request $request)
     {
+        /* name, phone, password */
         $this->myValidation($request);
 
         try {
@@ -56,8 +57,12 @@ class AuthController extends Controller
         DB::beginTransaction();
         try {
             $phone = PhoneNumber::make($request->phone)->ofCountry('RU');
-            $worker = WorkerPhone::where('number', $phone);
-
+            $workerPhone = WorkerPhone::where('number', $phone)->get()->first();
+            
+            return response([
+                'phone' => $phone,
+                'workerPhone' => $workerPhone->worker
+            ], 400);
 
             $user->save();
 
