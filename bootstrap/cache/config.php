@@ -524,7 +524,7 @@
   'session' => 
   array (
     'driver' => 'file',
-    'lifetime' => '10',
+    'lifetime' => '100',
     'expire_on_close' => false,
     'encrypt' => false,
     'files' => 'C:\\OSPanel\\domains\\arbait\\storage\\framework\\sessions',

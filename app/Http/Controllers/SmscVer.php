@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Verification;
+use App\WorkerPhone;
+use App\User;
+use App\Role;
+
 use Cookie;
 use Illuminate\Http\Request;
-use JWTAuth;
 use Response;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
@@ -20,23 +23,28 @@ class SmscVer extends Controller
     public function send(Request $request)
     {
         $this->attack($request);
-        $telNumber = $_COOKIE['user_ver_NUM'];
+        $phone = session('phone');
         $client = new \GuzzleHttp\Client();
+        
         $response = $client->request(
             'GET',
             "https://smsc.ru/sys/send.php?" .
-            "login=$this->login&psw=$this->password&phones=$telNumber&mes=code&call=1&fmt=3"
+            "login=$this->login&psw=$this->password&phones=$phone&mes=code&call=1&fmt=3"
         );
+        
         if ($response->getStatusCode() == 200) {
             $jsonBody = $response->getBody();
             $a = json_decode($jsonBody, true);
 
-            return response([$response->getBody()], 400);
+            //return response([$response->getBody()], 400);
+            session([
+              'server_ver_ID' => $a['id'],
+              'server_ver_CODE' => substr($a['code'], -4),
+              'server_ver_CNT' => $a['cnt']
+            ]);
+
             return response()->json([
-                'server_ver_ID' => $a['id'],
-                'server_ver_CODE' => substr($a['code'], -4),
-                'server_ver_CNT' => $a['cnt'],
-                'error' => false
+                'session' => session()->all()
             ]);
         }
         else {
@@ -47,39 +55,82 @@ class SmscVer extends Controller
         }
     }
 
-    public function verify(Request $request)
-    {
+    public function verify(Request $request) {
+        $request->validate(
+          [
+              //'title' => 'bail|required|unique:posts|max:255',
+              'user_ver_code' => 'min:4|max:4',
+          ],
+          [
+              'user_ver_code.min'     => Lang::get('auth.min_name'),
+              'user_ver_code.max'     => Lang::get('auth.max_name'),
+          ]
+        );
         $userVerCode = $request['user_ver_code'];
 
-        $this->traceError($request);
+        if ($userVerCode === session('server_ver_CODE']) {
+          $this->traceString('server_ver_CODE: ' . session('server_ver_CODE'));
+          $this->traceString('server_ver_ID: ' . session('server_ver_ID'));
+          $this->traceString('user_ver_NUM: ' . session('user_ver_NUM'));
+          $this->traceString('server_ver_CNT: ' . session('server_ver_CNT'));
 
-        if ( isset($_COOKIE['server_ver_CODE']) &&
-            ($userVerCode == $_COOKIE['server_ver_CODE']) )
-        {
-            $this->traceString('server_ver_CODE: ' . $_COOKIE['server_ver_CODE']);
-            $this->traceString('server_ver_ID: ' . $_COOKIE['server_ver_ID']);
-            $this->traceString('user_ver_NUM: ' . $_COOKIE['user_ver_NUM']);
-            $this->traceString('server_ver_CNT: ' . $_COOKIE['server_ver_CNT']);
+          $status = 200;
 
-            $status = 200;
-            /*$ver = new Verification;
-            $ver->id = $_COOKIE['server_ver_ID'];
-            $ver->code = $_COOKIE['server_ver_CODE'];
-            $ver->tel_number = $_COOKIE['user_ver_NUM'];
-            $ver->cnt = $_COOKIE['server_ver_CNT'];
-            $ver->user_id = JWTAuth::parseToken()->authenticate()->id;
-            $ver->save();*/
+          $actions = sesssion('actions');
+          foreach($actions as $action) {
+            switch($action) {
+              case 'createWorkerAndWorkerPhone':
+                $worker = new Worker();
+                $worker->name = session('name');
+                $worker->created_at = Carbon::now();
+                $worker->updated_at = Carbon::now();
+                $worker->save();
 
-            $userId = JWTAuth::parseToken()->authenticate()->id;
-            DB::table('users')
-                ->where('id', $userId)
-                ->update(array('verified_phone' => 1));
+                if (!isset(session('workerPhone'))) {
+                  $workerPhone = new WorkerPhone();
+                  $workerPhone->number = session('phone');
+                }
+                else {
+                  $workerPhone = session('workerPhone');
+                }
+                $workerPhone->worker_id = $worker->id;
+                $workerPhone->type = WorkerPhone::PHONE_TYPE_CALL;
+                $workerPhone->created_at = Carbon::now();
+                $workerPhone->updated_at = Carbon::now();
+                $workerPhone->save();
+                break;
+              case 'createUserAndBindWithWorker':
+                $user = new User();
+                $user->role = Role::WORKER_ID;
+                $user->fullname = session('name');
+                $user->name = session('name');
+                $user->phone_call = session('phone');
+                $user->password = session('password');
+                $user->verified_phone = 1;
+                $user->save();
 
-            (new CRegistrationProgress())->save($request);
+                if (!isset($worker)) {
+                  $worker = session('worker');
+                }
+                $worker->user_id = $user->id;
+                $worker->save();
+                break;
+            }
+          }
+          Session::forget('name');
+          Session::forget('phone');
+          Session::forget('password');
+          Session::forget('worker');
+          Session::forget('workerPhone');
+
+          session([
+            'user' => $user,
+            'user_is_logged_in' => true
+          ]);
         }
         else {
-            $status = 400;
-            $this->traceError($request);
+          $status = 400;
+          $this->traceError($request);
         }
 
         return response([], $status);

@@ -77,7 +77,7 @@ class AuthController extends Controller
           if ($worker) 
           {
             $user = $worker->user;
-            if ($user != null) 
+            if ($user !== null) 
             {
               Session::forget('name');
               Session::forget('phone');
@@ -95,34 +95,26 @@ class AuthController extends Controller
               // сохраним в сессию указание:
               // создать User и привязать к нему Worker
               session([
+                'worker' => $worker,
                 'actions' => [0 => 'createUserAndBindWithWorker'],
               ]);
             }
           }
-          else
+        }
+
+        if (!$workerPhone || !$worker)
+        {
+          if ($workerPhone)
           {
-            // сохраним в сессию указание:
-            // 1. создать Worker и привязать к нему WorkerPhone
-            // 2. создать User и привязать к нему Worker
             session([
-              'actions' => [
-                0 => 'createWorkerAndBindWithPhone',
-                1 => 'createUserAndBindWithWorker'
-              ],
+              'workerPhone' => $workerPhone,
             ]);
           }
-        }
-        else
-        {
-          // сохраним в сессию указание:
-          // 1. создать WorkerPhone
-          // 2. создать Worker и привязать к нему WorkerPhone
-          // 3. создать User и привязать к нему Worker
+          
           session([
             'actions' => [
-              0 => 'createWorkerPhone',
-              1 => 'createWorkerAndBindWithPhone',
-              2 => 'createUserAndBindWithWorker'
+              0 => 'createWorkerAndWorkerPhone',
+              1 => 'createUserAndBindWithWorker'
             ],
           ]);
         }

@@ -11,6 +11,10 @@ class WorkerPhone extends Model
     protected $fillable = ['number', 'type', 'worker_id'];
     protected $primaryKey = 'number';
 
+    public const PHONE_TYPE_CALL = 'c';
+    public const PHONE_TYPE_WHATSAPP = 'w';
+    public const PHONE_TYPE_CALL_WHATSAPP = 'cw';
+
     public function worker()
     {
         return $this->belongsTo(Worker::class, 'worker_id');
