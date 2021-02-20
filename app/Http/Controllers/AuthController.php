@@ -37,6 +37,7 @@ class AuthController extends Controller
         return User::all();
     }
 
+    // регистрация, шаг 1
     public function register(Request $request)
     {
       /* name, phone, password */
@@ -64,7 +65,11 @@ class AuthController extends Controller
       {
         $phone = PhoneNumber::make($request->phone)->ofCountry('RU');
         $workerPhone = WorkerPhone::where('number', $phone)->get()->first();
-        // сохраним в сессию name, phone, password
+        session([
+          'name' => $request->name,
+          'phone' => $request->phone,
+          'password' => sha1($request->password)
+        ]);
 
         if ($workerPhone) 
         {
@@ -74,7 +79,10 @@ class AuthController extends Controller
             $user = $worker->user;
             if ($user != null) 
             {
-              // удалим из сессии name, phone, password
+              Session::forget('name');
+              Session::forget('phone');
+              Session::forget('password');
+
               return response
               ([
                   'status' => 'error',
@@ -86,6 +94,9 @@ class AuthController extends Controller
             {
               // сохраним в сессию указание:
               // создать User и привязать к нему Worker
+              session([
+                'actions' => [0 => 'createUserAndBindWithWorker'],
+              ]);
             }
           }
           else
@@ -93,6 +104,12 @@ class AuthController extends Controller
             // сохраним в сессию указание:
             // 1. создать Worker и привязать к нему WorkerPhone
             // 2. создать User и привязать к нему Worker
+            session([
+              'actions' => [
+                0 => 'createWorkerAndBindWithPhone',
+                1 => 'createUserAndBindWithWorker'
+              ],
+            ]);
           }
         }
         else
@@ -101,6 +118,13 @@ class AuthController extends Controller
           // 1. создать WorkerPhone
           // 2. создать Worker и привязать к нему WorkerPhone
           // 3. создать User и привязать к нему Worker
+          session([
+            'actions' => [
+              0 => 'createWorkerPhone',
+              1 => 'createWorkerAndBindWithPhone',
+              2 => 'createUserAndBindWithWorker'
+            ],
+          ]);
         }
       }
       catch (QueryException $e) 
@@ -115,8 +139,11 @@ class AuthController extends Controller
       }
       DB::commit();
 
+      $data = session()->all();
+
       return response([
-        'status' => 'ok'
+        'status' => 'ok',
+        'session' => $data
       ], 200);
     }
 
