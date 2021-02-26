@@ -77,6 +77,7 @@ class AuthController extends Controller
           if ($worker) 
           {
             $user = $worker->user;
+            
             if ($user !== null) 
             {
               Session::forget('name');

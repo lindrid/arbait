@@ -13,6 +13,7 @@ use Response;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Lang;
 
 
 class SmscVer extends Controller
@@ -22,7 +23,6 @@ class SmscVer extends Controller
 
     public function send(Request $request)
     {
-        $this->attack($request);
         $phone = session('phone');
         $client = new \GuzzleHttp\Client();
         
@@ -36,7 +36,6 @@ class SmscVer extends Controller
             $jsonBody = $response->getBody();
             $a = json_decode($jsonBody, true);
 
-            //return response([$response->getBody()], 400);
             session([
               'server_ver_ID' => $a['id'],
               'server_ver_CODE' => substr($a['code'], -4),
@@ -67,8 +66,9 @@ class SmscVer extends Controller
           ]
         );
         $userVerCode = $request['user_ver_code'];
+        $actions = session('actions');
 
-        if ($userVerCode === session('server_ver_CODE']) {
+        if ($userVerCode === session('server_ver_CODE')) {
           $this->traceString('server_ver_CODE: ' . session('server_ver_CODE'));
           $this->traceString('server_ver_ID: ' . session('server_ver_ID'));
           $this->traceString('user_ver_NUM: ' . session('user_ver_NUM'));
@@ -76,7 +76,6 @@ class SmscVer extends Controller
 
           $status = 200;
 
-          $actions = sesssion('actions');
           foreach($actions as $action) {
             switch($action) {
               case 'createWorkerAndWorkerPhone':
@@ -86,7 +85,7 @@ class SmscVer extends Controller
                 $worker->updated_at = Carbon::now();
                 $worker->save();
 
-                if (!isset(session('workerPhone'))) {
+                if (!session('workerPhone')) {
                   $workerPhone = new WorkerPhone();
                   $workerPhone->number = session('phone');
                 }
@@ -101,7 +100,7 @@ class SmscVer extends Controller
                 break;
               case 'createUserAndBindWithWorker':
                 $user = new User();
-                $user->role = Role::WORKER_ID;
+                $user->role_id = Role::WORKER_ID;
                 $user->fullname = session('name');
                 $user->name = session('name');
                 $user->phone_call = session('phone');
@@ -130,16 +129,22 @@ class SmscVer extends Controller
         }
         else {
           $status = 400;
-          $this->traceError($request);
+          //$this->traceError($request);
+          return response([
+            'error' => true, 
+            'error_code' => 1, 
+            'error_msg' => 'Неправильный код',
+            'user_ver_code' => $userVerCode,
+            'server_ver_code' => session('server_ver_CODE'),
+          ], $status);
         }
 
-        return response([], $status);
-    }
-
-    public function attack(Request $request)
-    {
-        $_COOKIE['user_ver_NUM'] = $request['phone_num'];
-
+        return response([
+          'status' => 'OK',
+          'actions' => $actions,
+          'user' => session('user'),
+          'user_is_logged_in' => session('user_is_logged_in'),
+        ], $status);
     }
 
     private function traceString($s)

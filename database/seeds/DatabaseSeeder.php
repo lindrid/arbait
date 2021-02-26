@@ -47,6 +47,12 @@ class DatabaseSeeder extends Seeder
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
+            [
+                'id'    => 5,
+                'name' => 'Рабочий',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ],
         ));
     }
 

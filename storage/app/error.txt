@@ -3947,3 +3947,168 @@ Sat, Jun 15, 2019 11:57 AM, Error in WorkerOccupationsAndSkillsController.store
 server_ver_CNT: 1
 
 sdsdfsdfsdf
+
+
+
+
+
+=======================
+Fri, Feb 26, 2021 3:31 PM, Error in WorkerOccupationsAndSkillsController.store
+=======================
+
+
+POST /api/verify_user?user_ver_code=7093 HTTP/1.1
+Accept:          */*
+Accept-Encoding: gzip, deflate, br
+Connection:      keep-alive
+Content-Length:  0
+Cookie:          user_ver_NUM=89240078897; XSRF-TOKEN=eyJpdiI6InFvU0lITG1taU9Uc0lQaXcyUTFXSmc9PSIsInZhbHVlIjoiK0piQzVDQkd1aTFGMmx4RnlZMkk4OStGMlE1ZllZd2ZBN0NEdkp5SWdhcWxoUUx5Q3p6dENIaG5zU0VBYUtcL1UiLCJtYWMiOiJjNTA3MmIxMTBjYTQ3ZGRjY2RkODFmNzY0YTBjN2UzY2RiMDcyNDI2N2Y4Y2RjYWI3ODExNGU1MGU4NTA1MThhIn0%3D; laravel_session=u6XPzHsTGhw6ajF8qt0Yaf9dU4uHxJVtVejMMkL6
+Host:            192.168.42.78
+Postman-Token:   4ad2bd26-cfc2-4157-912e-2cb5f77a528c
+User-Agent:      PostmanRuntime/7.26.8
+Cookie: user_ver_NUM=89240078897; XSRF-TOKEN=eyJpdiI6InFvU0lITG1taU9Uc0lQaXcyUTFXSmc9PSIsInZhbHVlIjoiK0piQzVDQkd1aTFGMmx4RnlZMkk4OStGMlE1ZllZd2ZBN0NEdkp5SWdhcWxoUUx5Q3p6dENIaG5zU0VBYUtcL1UiLCJtYWMiOiJjNTA3MmIxMTBjYTQ3ZGRjY2RkODFmNzY0YTBjN2UzY2RiMDcyNDI2N2Y4Y2RjYWI3ODExNGU1MGU4NTA1MThhIn0=; laravel_session=u6XPzHsTGhw6ajF8qt0Yaf9dU4uHxJVtVejMMkL6
+
+
+
+
+
+
+=======================
+Fri, Feb 26, 2021 3:32 PM, Error in WorkerOccupationsAndSkillsController.store
+=======================
+
+
+POST /api/verify_user?user_ver_code=7093 HTTP/1.1
+Accept:          */*
+Accept-Encoding: gzip, deflate, br
+Connection:      keep-alive
+Content-Length:  0
+Cookie:          user_ver_NUM=89240078897; XSRF-TOKEN=eyJpdiI6InFvU0lITG1taU9Uc0lQaXcyUTFXSmc9PSIsInZhbHVlIjoiK0piQzVDQkd1aTFGMmx4RnlZMkk4OStGMlE1ZllZd2ZBN0NEdkp5SWdhcWxoUUx5Q3p6dENIaG5zU0VBYUtcL1UiLCJtYWMiOiJjNTA3MmIxMTBjYTQ3ZGRjY2RkODFmNzY0YTBjN2UzY2RiMDcyNDI2N2Y4Y2RjYWI3ODExNGU1MGU4NTA1MThhIn0%3D; laravel_session=u6XPzHsTGhw6ajF8qt0Yaf9dU4uHxJVtVejMMkL6
+Host:            192.168.42.78
+Postman-Token:   9e0b8d78-130e-40c4-9a30-496f7b5e2093
+User-Agent:      PostmanRuntime/7.26.8
+Cookie: user_ver_NUM=89240078897; XSRF-TOKEN=eyJpdiI6InFvU0lITG1taU9Uc0lQaXcyUTFXSmc9PSIsInZhbHVlIjoiK0piQzVDQkd1aTFGMmx4RnlZMkk4OStGMlE1ZllZd2ZBN0NEdkp5SWdhcWxoUUx5Q3p6dENIaG5zU0VBYUtcL1UiLCJtYWMiOiJjNTA3MmIxMTBjYTQ3ZGRjY2RkODFmNzY0YTBjN2UzY2RiMDcyNDI2N2Y4Y2RjYWI3ODExNGU1MGU4NTA1MThhIn0=; laravel_session=u6XPzHsTGhw6ajF8qt0Yaf9dU4uHxJVtVejMMkL6
+
+
+
+
+
+
+=======================
+Fri, Feb 26, 2021 3:33 PM, Error in WorkerOccupationsAndSkillsController.store
+=======================
+
+
+POST /api/verify_user?user_ver_code=7093 HTTP/1.1
+Accept:          */*
+Accept-Encoding: gzip, deflate, br
+Connection:      keep-alive
+Content-Length:  0
+Cookie:          user_ver_NUM=89240078897; XSRF-TOKEN=eyJpdiI6InFvU0lITG1taU9Uc0lQaXcyUTFXSmc9PSIsInZhbHVlIjoiK0piQzVDQkd1aTFGMmx4RnlZMkk4OStGMlE1ZllZd2ZBN0NEdkp5SWdhcWxoUUx5Q3p6dENIaG5zU0VBYUtcL1UiLCJtYWMiOiJjNTA3MmIxMTBjYTQ3ZGRjY2RkODFmNzY0YTBjN2UzY2RiMDcyNDI2N2Y4Y2RjYWI3ODExNGU1MGU4NTA1MThhIn0%3D; laravel_session=u6XPzHsTGhw6ajF8qt0Yaf9dU4uHxJVtVejMMkL6
+Host:            192.168.42.78
+Postman-Token:   0f2d5f34-f5cd-44eb-afbe-3a16b7d64574
+User-Agent:      PostmanRuntime/7.26.8
+Cookie: user_ver_NUM=89240078897; XSRF-TOKEN=eyJpdiI6InFvU0lITG1taU9Uc0lQaXcyUTFXSmc9PSIsInZhbHVlIjoiK0piQzVDQkd1aTFGMmx4RnlZMkk4OStGMlE1ZllZd2ZBN0NEdkp5SWdhcWxoUUx5Q3p6dENIaG5zU0VBYUtcL1UiLCJtYWMiOiJjNTA3MmIxMTBjYTQ3ZGRjY2RkODFmNzY0YTBjN2UzY2RiMDcyNDI2N2Y4Y2RjYWI3ODExNGU1MGU4NTA1MThhIn0=; laravel_session=u6XPzHsTGhw6ajF8qt0Yaf9dU4uHxJVtVejMMkL6
+
+
+
+
+
+
+=======================
+Fri, Feb 26, 2021 3:33 PM, Error in WorkerOccupationsAndSkillsController.store
+=======================
+
+
+POST /api/verify_user?user_ver_code=7093 HTTP/1.1
+Accept:          */*
+Accept-Encoding: gzip, deflate, br
+Connection:      keep-alive
+Content-Length:  0
+Cookie:          user_ver_NUM=89240078897; XSRF-TOKEN=eyJpdiI6InFvU0lITG1taU9Uc0lQaXcyUTFXSmc9PSIsInZhbHVlIjoiK0piQzVDQkd1aTFGMmx4RnlZMkk4OStGMlE1ZllZd2ZBN0NEdkp5SWdhcWxoUUx5Q3p6dENIaG5zU0VBYUtcL1UiLCJtYWMiOiJjNTA3MmIxMTBjYTQ3ZGRjY2RkODFmNzY0YTBjN2UzY2RiMDcyNDI2N2Y4Y2RjYWI3ODExNGU1MGU4NTA1MThhIn0%3D; laravel_session=u6XPzHsTGhw6ajF8qt0Yaf9dU4uHxJVtVejMMkL6
+Host:            192.168.42.78
+Postman-Token:   ff1822f8-ccf6-4687-a6b2-8b612b7512fa
+User-Agent:      PostmanRuntime/7.26.8
+Cookie: user_ver_NUM=89240078897; XSRF-TOKEN=eyJpdiI6InFvU0lITG1taU9Uc0lQaXcyUTFXSmc9PSIsInZhbHVlIjoiK0piQzVDQkd1aTFGMmx4RnlZMkk4OStGMlE1ZllZd2ZBN0NEdkp5SWdhcWxoUUx5Q3p6dENIaG5zU0VBYUtcL1UiLCJtYWMiOiJjNTA3MmIxMTBjYTQ3ZGRjY2RkODFmNzY0YTBjN2UzY2RiMDcyNDI2N2Y4Y2RjYWI3ODExNGU1MGU4NTA1MThhIn0=; laravel_session=u6XPzHsTGhw6ajF8qt0Yaf9dU4uHxJVtVejMMkL6
+
+
+
+
+
+
+=======================
+Fri, Feb 26, 2021 3:35 PM, Error in WorkerOccupationsAndSkillsController.store
+=======================
+
+
+server_ver_CODE: 7609
+
+
+
+
+=======================
+Fri, Feb 26, 2021 3:35 PM, Error in WorkerOccupationsAndSkillsController.store
+=======================
+
+
+server_ver_ID: 27
+
+
+
+
+=======================
+Fri, Feb 26, 2021 3:35 PM, Error in WorkerOccupationsAndSkillsController.store
+=======================
+
+
+user_ver_NUM: 
+
+
+
+
+=======================
+Fri, Feb 26, 2021 3:35 PM, Error in WorkerOccupationsAndSkillsController.store
+=======================
+
+
+server_ver_CNT: 5
+
+
+
+
+=======================
+Fri, Feb 26, 2021 3:45 PM, Error in WorkerOccupationsAndSkillsController.store
+=======================
+
+
+server_ver_CODE: 7609
+
+
+
+
+=======================
+Fri, Feb 26, 2021 3:45 PM, Error in WorkerOccupationsAndSkillsController.store
+=======================
+
+
+server_ver_ID: 27
+
+
+
+
+=======================
+Fri, Feb 26, 2021 3:45 PM, Error in WorkerOccupationsAndSkillsController.store
+=======================
+
+
+user_ver_NUM: 
+
+
+
+
+=======================
+Fri, Feb 26, 2021 3:45 PM, Error in WorkerOccupationsAndSkillsController.store
+=======================
+
+
+server_ver_CNT: 5
